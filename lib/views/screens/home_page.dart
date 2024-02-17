@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:student_log__provider/views/add_student_page.dart';
+import 'package:student_log__provider/views/screens/add_student_page.dart';
+import 'package:student_log__provider/views/styles/theme_colours.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Student Log"),
         centerTitle: true,
       ),
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Row(
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage> {
                     width: 60,
                     child: TextField(
                       decoration: InputDecoration(
-                        fillColor: Colors.white,
+                        fillColor: purpleTheme(),
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.only(
@@ -62,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(22),
                           bottomRight: Radius.circular(22)),
-                      color: Colors.white),
+                      color: purpleTheme()),
                   child: IconButton(
                     onPressed: () {
                       //search function
@@ -80,12 +81,16 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddStudentPage(),));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddStudentPage(),
+              ));
         },
         backgroundColor: Colors.white,
         child: Icon(Icons.person_add_alt_rounded),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

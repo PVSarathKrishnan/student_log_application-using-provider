@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:student_log__provider/views/home_page.dart';
+import 'package:student_log__provider/views/screens/home_page.dart';
 
 void main() {
   runApp(const MyApp());
