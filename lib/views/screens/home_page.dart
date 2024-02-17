@@ -1,7 +1,12 @@
-// ignore_for_file: prefer_const_constructors
-
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
+import 'package:student_log__provider/model/database_functions.dart';
+import 'package:student_log__provider/services/student_helper.dart';
 import 'package:student_log__provider/views/screens/add_student_page.dart';
+import 'package:student_log__provider/views/screens/student_list.dart';
+import 'package:student_log__provider/views/styles/text_theme.dart';
 import 'package:student_log__provider/views/styles/theme_colours.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,84 +18,108 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    super.initState();
+    getStudents();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Student Log"),
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                // Use Expanded instead of Flexible
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: 8.0,
-                    left: 8,
-                    bottom: 8,
-                  ),
-                  child: Container(
-                    height: 60,
-                    width: 60,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        fillColor: purpleTheme(),
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(22),
-                              bottomLeft: Radius.circular(22)),
-                          borderSide: BorderSide.none,
+    return Consumer<StudentProvider>(builder: (context, value, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Student Log - provider",
+            style: text_bold(),
+          ),
+          centerTitle: true,
+        ),
+        backgroundColor: Colors.white,
+        body: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
+                  child: Material(
+                    elevation: 8, // Adjust the elevation value as needed
+                    borderRadius: BorderRadius.circular(25),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => AddStudentPage(
+                            isedit: false,
+                          ),
+                        ));
+                      },
+                      child: Container(
+                        height: 150,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: purpleTheme(),
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              "lib/assets/newuser.png",
+                              height: 80,
+                              width: 80,
+                            ),
+                            Text(
+                              "Register a new student",
+                              style: text_bold(),
+                            )
+                          ],
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 8.0,
-                  right: 8,
-                  bottom: 8,
-                ),
-                child: Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(22),
-                          bottomRight: Radius.circular(22)),
-                      color: purpleTheme()),
-                  child: IconButton(
-                    onPressed: () {
-                      //search function
-                    },
-                    icon: Icon(
-                      Icons.search,
-                      color: const Color.fromARGB(255, 0, 0, 0),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 10),
+                    child: Material(
+                        elevation: 8, // Adjust the elevation value as needed
+                        borderRadius: BorderRadius.circular(25),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => StudentList(),
+                            ));
+                          },
+                          child: Container(
+                            height: 150,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: greenTheme(),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "lib/assets/db.png",
+                                  height: 80,
+                                  width: 80,
+                                ),
+                                Text(
+                                  "Database of students",
+                                  style: text_bold(),
+                                )
+                              ],
+                            ),
+                          ),
+                        ))),
+              ],
+            ),
           ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddStudentPage(),
-              ));
-        },
-        backgroundColor: Colors.white,
-        child: Icon(Icons.person_add_alt_rounded),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
+        ),
+      );
+    });
   }
 }
+

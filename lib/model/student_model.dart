@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-
+part 'student_model.g.dart';
 @HiveType(typeId: 1)
 class StudentModel extends HiveObject {
   @HiveField(0)
@@ -12,16 +12,19 @@ class StudentModel extends HiveObject {
   String name;
 
   @HiveField(3)
+  String email;
+  
+  @HiveField(4)
+  String mobile;
+  
+  @HiveField(5)
   String gender;
 
-  @HiveField(4)
+  @HiveField(6)
   String domain;
 
-  @HiveField(5)
-  String mobile;
-
-  @HiveField(6)
-  String email;
+  @HiveField(7)
+  String dob;
 
   StudentModel(
       {this.id,
@@ -30,5 +33,6 @@ class StudentModel extends HiveObject {
       required this.gender,
       required this.domain,
       required this.mobile,
-      required this.email});
+      required this.email,
+      required this.dob});
 }
