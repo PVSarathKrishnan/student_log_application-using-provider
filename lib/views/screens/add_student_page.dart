@@ -1,52 +1,61 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
 import 'package:provider/provider.dart';
 import 'package:student_log__provider/model/database_functions.dart';
 import 'package:student_log__provider/model/student_model.dart';
 import 'package:student_log__provider/services/student_helper.dart';
-import 'package:student_log__provider/views/screens/home_page.dart';
-import 'package:student_log__provider/views/styles/text_theme.dart';
-import 'package:student_log__provider/views/styles/theme_colours.dart';
 import 'package:student_log__provider/services/validators.dart';
+import 'package:student_log__provider/views/screens/home_page.dart';
+import 'package:student_log__provider/views/screens/student_list.dart';
 
-class AddStudentPage extends StatefulWidget {
-  AddStudentPage({super.key, required this.isedit, this.stu});
-  bool isedit = false;
+class AddPage extends StatefulWidget {
+  AddPage({super.key, required this.isEdit, this.stu});
+
+  bool isEdit = false;
   StudentModel? stu;
+
   @override
-  State<AddStudentPage> createState() => _AddStudentPageState();
+  State<AddPage> createState() => _AddPageState();
 }
 
-class _AddStudentPageState extends State<AddStudentPage> {
+class _AddPageState extends State<AddPage> {
   final _formKey = GlobalKey<FormState>();
+
   final _nameController = TextEditingController();
+
   final _mobileController = TextEditingController();
+
   final _emailController = TextEditingController();
-  final gender = ["male", "female", "Others"];
-  String selGender = "";
+
+  final gender = ['male', 'female', 'others'];
+
+  String selGender = '';
+
   final domainList = [
-    'MERN',
-    'MEAN',
+    'MERN - web development',
+    'MEAN - web development',
     'Django and React',
-    'Flutter',
+    'Mobile development using Flutter',
     'Data Science',
-    'Cyber security',
-    "GoLang",
-    "Java",
-    "Unity Game Development",
-    "DevOps"
+    'Cyber security'
   ];
-  String selDomain = "";
+
+  String selDomain = '';
+
   File? _selectedImage;
+
   DateTime dob = DateTime.now();
+
   String? d;
+
   DateTime? db;
+
   @override
   Widget build(BuildContext context) {
-    if (widget.isedit) {
+    if (widget.isEdit) {
       _selectedImage = File(widget.stu!.photo);
       _nameController.text = widget.stu!.name;
       selGender = widget.stu!.gender;
@@ -55,239 +64,207 @@ class _AddStudentPageState extends State<AddStudentPage> {
       _mobileController.text = widget.stu!.mobile;
       _emailController.text = widget.stu!.email;
     }
+
     return Consumer<StudentProvider>(
       builder: (context, value, child) => Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text(
-            "Add student information",
-            style: text_bold(),
-          ),
-        ),
+            title: widget.isEdit ? Text("Edit details") : Text("Add Details")),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Form(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
                       key: _formKey,
                       child: Column(
                         children: [
                           InkWell(
-                            onTap: () async {
-                              final picker = ImagePicker();
-                              final pickedImage = await picker.pickImage(
-                                  source: ImageSource.gallery);
-                              if (pickedImage != null) {
-                                _selectedImage = File(pickedImage.path);
-                                value.getImage(_selectedImage!);
-                              }
-                            },
-                            child: Container(
+                              onTap: () async {
+                                final picker = ImagePicker();
+                                final pickedImage = await picker.pickImage(
+                                    source: ImageSource.gallery);
+                                if (pickedImage != null) {
+                                  _selectedImage = File(pickedImage.path);
+                                  value.getImage(_selectedImage!);
+                                }
+                              },
+                              child: Container(
                                 height: 120,
                                 width: 120,
                                 clipBehavior: Clip.antiAliasWithSaveLayer,
                                 decoration: BoxDecoration(
-                                    color: purpleTheme(),
-                                    borderRadius: BorderRadius.circular(22),
-                                    border: Border.all(width: 1)),
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(width: 2)),
                                 child: _selectedImage != null
                                     ? Image.file(
                                         _selectedImage!,
-                                        filterQuality: FilterQuality.high,
                                         fit: BoxFit.fill,
                                       )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.add_a_photo_rounded,
-                                          ),
-                                          Text("Add a photo")
-                                        ],
-                                      )),
-                          ),
-                          SizedBox(
+                                    : const Icon(Icons.photo),
+                              )),
+                          const SizedBox(
                             height: 20,
                           ),
                           TextFormField(
-                            autocorrect: true,
                             controller: _nameController,
                             validator: Validators.validateFullName,
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                                hintText: "Student Name",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(22))),
+                            decoration: const InputDecoration(hintText: "Name"),
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            autocorrect: true,
-                            validator: Validators.validateEmail,
-                            controller: _emailController,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                                hintText: "Email",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(22))),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          TextFormField(
-                            autocorrect: true,
-                            controller: _mobileController,
-                            validator: Validators.validateMobile,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            decoration: InputDecoration(
-                                hintText: "Mobile",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(22))),
-                          ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           Container(
                             decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius: BorderRadius.circular(22)),
-                            child: Row(
+                              border: Border.all(color: Colors.black),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Gender : "),
+                                const Text(
+                                  'Gender',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
+                                const SizedBox(height: 8.0),
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: gender.map((String value1) {
                                     return Container(
-                                      margin: EdgeInsets.all(8),
+                                      margin: const EdgeInsets.only(right: 8.0),
                                       child: Column(
                                         children: [
-                                          Text(value1),
+                                          Text(
+                                            value1,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
                                           Radio(
                                             value: value1,
                                             groupValue: selGender,
-                                            onChanged: (Selectedvalue) {
+                                            onChanged: (selectedValue) {
                                               selGender =
-                                                  Selectedvalue.toString();
+                                                  selectedValue.toString();
                                               value.getGender(selGender);
                                             },
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(), // Convert the Iterable<Container> to List<Widget>
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          DropdownButtonFormField(
-                            validator: (value) {
-                              if (value == null) {
-                                return "Select a domain";
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                                hintText: 'Domain',
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(22)),
-                                enabledBorder: OutlineInputBorder(
-                                    borderSide: const BorderSide(
-                                        width: 1, color: Colors.black),
-                                    borderRadius: BorderRadius.circular(10.0))),
-                            items: domainList.map((String domain) {
-                              return DropdownMenuItem(
-                                child: Text(domain),
-                                value: domain,
-                              );
-                            }).toList(),
-                            onChanged: (String? domain) {
-                              value.getDomain(domain!);
-                            },
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Colors.black),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Choose Date of Birth : "),
-                                ),
-                                TextButton(
-                                    onPressed: () async {
-                                      final DateTime? pickedDate =
-                                          await showDatePicker(
-                                              context: context,
-                                              initialDate: dob,
-                                              firstDate: DateTime(1990),
-                                              lastDate: DateTime(2025));
-                                      if (pickedDate != null &&
-                                          pickedDate != dob) {
-                                        dob = pickedDate;
-                                        value.getDOB(dob);
-                                      }
-                                    },
-                                    child: Container(
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.calendar_month),
-                                          Text(
-                                            DateFormat(
-                                              'dd-MM-yyyy',
-                                            ).format(DateTime.parse("$dob")),
-                                            textAlign: TextAlign.center,
                                           ),
                                         ],
                                       ),
-                                    ))
+                                    );
+                                  }).toList(),
+                                ),
                               ],
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
-                          Container(
-                            width: 200,
-                            child: ElevatedButton(
-                                onPressed: () {
-                                  submit(
-                                      d = value.domain, db = value.dateOfBirth);
-                                },
-                                child: Text(
-                                  "Submit",
-                                  style: text_bold(),
-                                )),
+                          DropdownButtonFormField(
+                              // value: selDomain, - // exception happening
+                              validator: (value) {
+                                if (value == null) {
+                                  return "select Domain";
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                  hintText: 'Domain',
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 1,
+                                          color:
+                                              Color.fromRGBO(117, 185, 237, 1)),
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderSide: const BorderSide(
+                                          width: 1, color: Colors.black),
+                                      borderRadius:
+                                          BorderRadius.circular(10.0))),
+                              items: domainList.map((String domain) {
+                                return DropdownMenuItem(
+                                    value: domain, child: Text(domain));
+                              }).toList(),
+                              onChanged: (String? domain) {
+                                value.getDomain(domain!);
+                              }),
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Row(
+                            children: [
+                              const Text("Date Of Birth"),
+                              TextButton(
+                                  onPressed: () async {
+                                    final DateTime? pickedDate =
+                                        await showDatePicker(
+                                            context: context,
+                                            initialDate: dob,
+                                            firstDate: DateTime(1973),
+                                            lastDate: DateTime(2025));
+                                    if (pickedDate != null &&
+                                        pickedDate != dob) {
+                                      dob = pickedDate;
+                                      value.getDOB(dob);
+                                    }
+                                  },
+                                  child: Text(DateFormat('dd-MM-yyyy')
+                                      .format(DateTime.parse("$dob")))),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            validator: Validators.validateMobile,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            controller: _mobileController,
+                            decoration: const InputDecoration(
+                              hintText: "Mobile ",
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          TextFormField(
+                            validator: Validators.validateEmail,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            controller: _emailController,
+                            decoration:
+                                const InputDecoration(hintText: "Email"),
+                            keyboardType: TextInputType.emailAddress,
                           )
                         ],
-                      ),
-                    ),
-                  )
-                ],
-              ),
+                      )),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                widget.isEdit
+                    ? ElevatedButton.icon(
+                        onPressed: () {
+                          edit(d = value.domain, db = value.dateOfBirth);
+                        },
+                        icon: const Icon(Icons.update),
+                        label: const Text("Update"))
+                    : ElevatedButton.icon(
+                        onPressed: () {
+                          submit(d = value.domain, db = value.dateOfBirth);
+                        },
+                        icon: const Icon(Icons.save),
+                        label: const Text("Register"))
+              ],
             ),
           ),
         ),
@@ -295,6 +272,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
     );
   }
 
+// ...
   Future<void> submit(String? d, DateTime? db) async {
     final imagePath = _selectedImage?.path;
     final name = _nameController.text.trim();
@@ -307,27 +285,36 @@ class _AddStudentPageState extends State<AddStudentPage> {
     if (_formKey.currentState?.validate() ?? false) {
       if (imagePath != null && dob != null) {
         final student = StudentModel(
-            photo: imagePath,
-            name: name,
-            gender: gender,
-            domain: domain!,
-            mobile: mobile,
-            email: email,
-            dob: dob);
-
+          photo: imagePath,
+          name: name,
+          gender: gender,
+          domain: domain!,
+          dob: dob,
+          mobile: mobile,
+          email: email,
+        );
         addStudent(student);
         Navigator.pushAndRemoveUntil(
-            context as BuildContext,
+            context,
             MaterialPageRoute(
               builder: (context) => HomePage(),
             ),
             (route) => false);
       } else {
-        ScaffoldMessenger.of(context as BuildContext).showSnackBar(SnackBar(
-          content: Text("Enter All Data"),
-          duration: Duration(seconds: 2),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Enter all data'),
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Enter all data'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
   }
 
@@ -345,10 +332,14 @@ class _AddStudentPageState extends State<AddStudentPage> {
     if (_formKey.currentState?.validate() ?? false) {
       if (imagePath != null && dob != null && gender != null) {
         editStudent(id!, imagePath, name, gender, domain!, dob, mobile, email);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => StudentList(),
+            ),
+            (route) => false);
       } else {
-        // Handle the case where imagePath, dob, or gender is null
-        // print("Error: imagePath, dob, or gender is null");
-        ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Enter all data'),
             duration: Duration(seconds: 2),
@@ -356,7 +347,7 @@ class _AddStudentPageState extends State<AddStudentPage> {
         );
       }
     } else {
-      ScaffoldMessenger.of(context as BuildContext).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Enter all data'),
           duration: Duration(seconds: 2),

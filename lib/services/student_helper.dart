@@ -1,46 +1,51 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:student_log__provider/model/student_model.dart';
 
-class StudentProvider extends ChangeNotifier {
+class StudentProvider extends ChangeNotifier{
+
   File? profileImage;
   DateTime? dateOfBirth;
   String? gender;
   String? domain;
 
   List<StudentModel> _studentList = [];
-  List<StudentModel> get studentList => _studentList;
-
+  List<StudentModel> get studentLists => _studentList;
+  
   int count = 0;
 
-  // adding image
-  getImage(File image) {
+
+//to add image
+  getImage(File image){
     profileImage = image;
     notifyListeners();
   }
 
-  //adding date of birth
-  getDOB(DateTime dob) {
+//to add dob
+  getDOB(DateTime dob){
     dateOfBirth = dob;
     notifyListeners();
   }
 
-  //to add gender
-  getGender(String g) {
+//to add gender
+  getGender(String g){
     gender = g;
     notifyListeners();
   }
 
-  //to add domain
-  getDomain(String d) {
+//to add domain
+  getDomain(String d){
     domain = d;
     notifyListeners();
   }
 
-  //searching
-  searchStudent(List<StudentModel> newList) {
+  searchStudent(List<StudentModel> newList){
     _studentList = newList;
     notifyListeners();
   }
+
+
+
 }

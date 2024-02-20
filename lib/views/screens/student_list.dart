@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:student_log__provider/model/database_functions.dart';
 import 'package:student_log__provider/model/student_model.dart';
 import 'package:student_log__provider/views/screens/add_student_page.dart';
+import 'package:student_log__provider/views/screens/home_page.dart';
 
 class StudentList extends StatefulWidget {
   const StudentList({super.key});
@@ -34,7 +35,18 @@ class _StudentListState extends State<StudentList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("student list"),
+        title: const Text("Students list"),
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => HomePage(),
+                  ),
+                  (route) => false);
+            },
+            icon: Icon(Icons.arrow_back)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -83,9 +95,8 @@ class _StudentListState extends State<StudentList> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AddStudentPage(
-                                                      isedit: true, stu: data),
+                                              builder: (context) => AddPage(
+                                                  isEdit: true, stu: data),
                                             ));
                                       },
                                       icon: Icons.edit,

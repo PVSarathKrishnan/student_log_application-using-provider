@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:student_log__provider/model/database_functions.dart';
 import 'package:student_log__provider/services/student_helper.dart';
@@ -40,6 +39,10 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text(
+                  "Provider",
+                  style: text_bold(),
+                ),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
@@ -49,8 +52,8 @@ class _HomePageState extends State<HomePage> {
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => AddStudentPage(
-                            isedit: false,
+                          builder: (context) => AddPage(
+                            isEdit: false, 
                           ),
                         ));
                       },
@@ -122,4 +125,3 @@ class _HomePageState extends State<HomePage> {
     });
   }
 }
-

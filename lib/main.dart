@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => StudentProvider(),)
+        ChangeNotifierProvider(create: (context) => StudentProvider(),),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: purpleTheme()),
           useMaterial3: true,
         ),
+        
         home: HomePage(),
       ),
     );
